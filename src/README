@@ -1,0 +1,97 @@
+PMSat: a parallel version of MiniSAT to be executed in cluster or grids of computers.
+
+Index:
+
+1- Description
+2- License
+3- Installation 
+4- Usage and options
+5- Author
+
+
+1- Description 
+
+PMSat is a parallel version of the SAT-solver MiniSAT. 
+The parallelism and communication are achieved by using the MPI library.
+
+
+2- License
+
+Both programs are under the MIT license:
+
+PMSat -- Copyright (c) 2006-2007, Luís Gil
+MiniSat -- Copyright (c) 2003-2005, Niklas Eén, Niklas Sörensson
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+3- Installation 
+
+This program should be executed in a cluster or grid of computers with MPI (version 1.0 or higher).
+
+Extract the contents of the tar file and use the make command to compile the source code.
+You may need to change the contents of the variable INCLUDE_DIR in the Makefile to the location 
+of directory '/mpich/include/' in your computer.
+
+Then you must copy the program to every nodes of the cluster, to the same directory, if isn't 
+available a shared file system. 
+
+You may also need to disable the password request of the ssh connections to the other nodes 
+of the cluster.
+
+
+4- Usage and options
+
+The boolean formulas to be solved also need to be copied to every computers 
+where the program will run, if isn't available a shared file system. 
+
+The program, pmsat, is executed by the mpirun command:
+
+mpirun -np number-of-CPUs pmsat [options] input-file [output-file]
+
+The parameter number-of-CPUs is used to set the number of copies of the
+program to execute. p CPUs correspond to one master to manage the search
+and p - 1 workers to solve the boolean formula.
+
+The most important options of the program are -n and -m to set the number
+of variables to assume and the search mode respectively.
+
+For k variables, the search modes Sequential (s) and Random (r) make 2^k
+tests while the Few first (f) and Many first (m) make only 2 × k tests.
+
+Example: Setting the number of CPUs to 4 (3 workers and the master),
+the search mode to Sequential and the number of variables to assume to 5:
+mpirun -np 4 pmsat -m s -n 5 file.cnf
+
+Example: Setting the number of CPUs to 9 (8 workers and the master),
+the search mode to Many first and the number of variables to assume to 12:
+mpirun -np 9 pmsat -m m -n 12 file.cnf
+
+If you provide a name for the output file, will be created a file with the
+result UNSAT or SAT and the model.
+
+To abort the execution of the program press Ctrl-C.
+
+
+5- Author
+
+Luís Gil, student of Computer Science at Instituto Superior Técnico - Technical University of Lisbon.
+
+

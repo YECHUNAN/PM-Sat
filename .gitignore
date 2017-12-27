@@ -1,0 +1,4 @@
+*.o
+pmsat
+config
+depend.mak
